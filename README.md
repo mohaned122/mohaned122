@@ -21,12 +21,15 @@
 ### 🔹 PeerMint
 A peer-to-peer communication system with LAN discovery, secure messaging, and digital reward mechanics.
 
-### 🔹 Challenge Kid
-A Flutter + Symfony platform designed to deliver educational content for kids in an interactive way.
+### 🔹 compus connect
+A web portal that allow peaple to connect with each other what ever for study , working or even chat
+<img width="1200" height="625" alt="image" src="https://github.com/user-attachments/assets/39821e21-d0cf-41ba-b133-2f20674ab634" />
+
 
 ### 🔹 Issat+ pro
 A modern potail web for e-learning build to replace https://issatso.rnu.tn/issatsoplus/student/news.
-![Banner](assets/banner.png)
+<img width="1200" height="618" alt="image" src="https://github.com/user-attachments/assets/00455149-4775-447f-9167-559b266d601d" />
+
 
 ---
 
