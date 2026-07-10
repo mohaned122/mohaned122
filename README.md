@@ -68,12 +68,12 @@ $ whoami
 
 <div align="center">
 
-[![GitHub stats](https://github-readme-stats.vercel.app/api?username=mohaned122&show_icons=true&theme=chartreuse-dark&hide_border=true)](https://github.com/mohaned122) &nbsp;
-[![GitHub streak](https://github-readme-streak-stats.herokuapp.com?user=mohaned122&theme=chartreuse-dark&hide_border=true)](https://github.com/mohaned122)
+[![GitHub stats](https://github-profile-summary-cards.vercel.app/api/cards/stats?username=mohaned122&theme=github_dark)](https://github.com/mohaned122) &nbsp;
+[![Top languages](https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=mohaned122&theme=github_dark)](https://github.com/mohaned122)
 
 <br>
 
-[![Top languages](https://github-readme-stats.vercel.app/api/top-langs/?username=mohaned122&layout=compact&theme=chartreuse-dark&hide_border=true)](https://github.com/mohaned122)
+[![GitHub streak](https://github-readme-streak-stats.herokuapp.com?user=mohaned122&theme=chartreuse-dark&hide_border=true)](https://github.com/mohaned122)
 
 </div>
 
@@ -81,7 +81,7 @@ $ whoami
 
 <div align="center">
 
-![Snake animation](https://raw.githubusercontent.com/mohaned122/mohaned122/output/github-contribution-grid-snake-dark.svg)
+[![Contribution graph](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=mohaned122&theme=github_dark)](https://github.com/mohaned122)
 
 </div>
 
