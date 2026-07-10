@@ -57,10 +57,10 @@ $ whoami
 
 ## Projects
 
-- **PFE Graduation Project** — Full-stack solution built with Spring Boot and Angular
-- **Backend Systems** — Distributed services, RESTful APIs, and database architecture with Spring Boot & MySQL
-- **Mobile Applications** — Cross-platform apps built with Flutter and Dart
-- **Distributed Systems** — Networking, communication protocols, and system design
+- **PFE Graduation Project** — Full-stack solution built with Spring Boot and Angular to manage patient file and help doctor orgonize thier work
+- **Tn_agro_system ** — Distributed services, RESTful APIs, and database architecture with Spring Boot & MySQL
+- **challenge-kid Applications** — Cross-platform apps built with Flutter and Dart
+- **Peer Mint** — Networking, communication protocols, and system design
 
 ---
 
