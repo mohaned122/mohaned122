@@ -28,24 +28,16 @@ $ whoami
 
 ---
 
-### Backend
+```bash
+$ skills
+> Java · Spring Boot · MySQL · Angular · TypeScript · Flutter · Dart · Linux · Git · GitHub
+```
 
-<a href="https://www.java.com"><img src="https://skillicons.dev/icons?i=java" height="35" alt="Java" /></a>&nbsp;
-<a href="https://spring.io"><img src="https://skillicons.dev/icons?i=spring" height="35" alt="Spring Boot" /></a>&nbsp;
-<a href="https://www.mysql.com"><img src="https://skillicons.dev/icons?i=mysql" height="35" alt="MySQL" /></a>
+<div align="center">
 
-### Frontend & Mobile
+<a href="https://skillicons.dev"><img src="https://skillicons.dev/icons?i=java,spring,mysql,angular,typescript,flutter,dart,linux,git,github" height="35" /></a>
 
-<a href="https://angular.dev"><img src="https://skillicons.dev/icons?i=angular" height="35" alt="Angular" /></a>&nbsp;
-<a href="https://www.typescriptlang.org"><img src="https://skillicons.dev/icons?i=typescript" height="35" alt="TypeScript" /></a>&nbsp;
-<a href="https://flutter.dev"><img src="https://skillicons.dev/icons?i=flutter" height="35" alt="Flutter" /></a>&nbsp;
-<a href="https://dart.dev"><img src="https://skillicons.dev/icons?i=dart" height="35" alt="Dart" /></a>
-
-### Tools
-
-<a href="https://www.linux.org"><img src="https://skillicons.dev/icons?i=linux" height="35" alt="Linux" /></a>&nbsp;
-<a href="https://git-scm.com"><img src="https://skillicons.dev/icons?i=git" height="35" alt="Git" /></a>&nbsp;
-<a href="https://github.com"><img src="https://skillicons.dev/icons?i=github" height="35" alt="GitHub" /></a>
+</div>
 
 ---
 
