@@ -51,7 +51,7 @@ $ skills
 
 <div align="center">
 
-![Snake animation](https://raw.githubusercontent.com/mohaned122/mohaned122/output/github-snake-dark.svg)
+<img src="assest/contributions.svg" alt="Contribution Heatmap" />
 
 </div>
 
