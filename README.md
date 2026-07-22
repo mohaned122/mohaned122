@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assest/me_as_ascii_animated.svg" alt="Mohaned" width="360" />
+<img src="assest/me_as_ascii_animated.svg" alt="Mohaned" width="100%" />
 
 ```text
  __  __  ___  _  _   _   _  _ _  _ ___ ___    ____  ___   _____  _   _ ___  
@@ -30,12 +30,12 @@ $ whoami
 
 ```bash
 $ skills
-> Java · Spring Boot · MySQL · Angular · TypeScript · Flutter · Dart · Linux · Git · GitHub
+> Java · Spring Boot · MySQL · Angular · TypeScript · Flutter · Dart · Python · PyTorch · Linux · Git · GitHub
 ```
 
 <div align="center">
 
-<a href="https://skillicons.dev"><img src="https://skillicons.dev/icons?i=java,spring,mysql,angular,typescript,flutter,dart,linux,git,github" height="35" /></a>
+<a href="https://skillicons.dev"><img src="https://skillicons.dev/icons?i=java,spring,mysql,angular,typescript,flutter,dart,python,pytorch,linux,git,github" height="35" /></a>
 
 </div>
 
@@ -62,6 +62,7 @@ $ skills
 <a href="https://mohannedzayoud.web.app"><img src="https://img.shields.io/badge/Portfolio-mohannedzayoud.web.app-181717?style=for-the-badge&logo=About.me&logoColor=white" /></a>
 <a href="https://linkedin.com/in/mohanned-zayoud-ab9464258/"><img src="https://img.shields.io/badge/LinkedIn-mohanned--zayoud-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" /></a>
 <a href="mailto:mohannidzayoud@gmail.com"><img src="https://img.shields.io/badge/Email-mohannidzayoud@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>
+<a href="tel:51916715"><img src="https://img.shields.io/badge/Phone-51916715-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 </div>
 
