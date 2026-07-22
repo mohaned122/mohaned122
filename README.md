@@ -51,7 +51,7 @@ $ skills
 
 <div align="center">
 
-![Contributions](https://gh-heat.anishroy.com/api/mohaned122/svg?darkMode=true&theme=accent&showLegend=true)
+![Snake animation](https://raw.githubusercontent.com/mohaned122/mohaned122/output/github-snake-dark.svg)
 
 </div>
 
