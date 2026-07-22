@@ -69,3 +69,6 @@ $ skills
 ---
 
 > *"Building the future, one commit at a time."*
+>
+> <a href="https://github.com/mohaned122?tab=repositories"><img src="https://img.shields.io/github/commit-activity/y/mohaned122/mohaned122?label=Commits%20this%20year&logo=github&color=58a6ff" /></a>
+> <a href="https://github.com/mohaned122?tab=repositories"><img src="https://img.shields.io/github/last-commit/mohaned122/mohaned122?label=Latest&logo=github&color=2ea043" /></a>
