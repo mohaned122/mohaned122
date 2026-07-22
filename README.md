@@ -51,7 +51,7 @@ $ skills
 
 <div align="center">
 
-[![Activity graph](https://github-readme-activity-graph.vercel.app/graph?username=mohaned122&theme=react-dark&hide_border=true&area=true)](https://github.com/mohaned122)
+![Contributions](https://gh-heat.anishroy.com/api/mohaned122/svg?darkMode=true&theme=accent&showLegend=true)
 
 </div>
 
