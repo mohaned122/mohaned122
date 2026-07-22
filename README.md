@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/mohaned122/mohaned122/main/assest/me_vs_bug.gif" width="200" />
+<img src="assest/me_as_ascii_animated.svg" alt="Mohaned" width="360" />
 
 ```text
  __  __  ___  _  _   _   _  _ _  _ ___ ___    ____  ___   _____  _   _ ___  
