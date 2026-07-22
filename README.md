@@ -72,3 +72,6 @@ $ skills
 >
 > <a href="https://github.com/mohaned122?tab=repositories"><img src="https://img.shields.io/github/commit-activity/y/mohaned122/mohaned122?label=Commits%20this%20year&logo=github&color=58a6ff" /></a>
 > <a href="https://github.com/mohaned122?tab=repositories"><img src="https://img.shields.io/github/last-commit/mohaned122/mohaned122?label=Latest&logo=github&color=2ea043" /></a>
+<a href="https://github.com/mohaned122">
+  <img src="https://github-readme-stats.vercel.app/api?username=mohaned122&show_icons=true&theme=github_dark&include_all_commits=true" />
+</a>
