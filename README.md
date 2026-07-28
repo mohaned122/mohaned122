@@ -31,6 +31,7 @@ $ whoami
 ```bash
 $ skills
 > Java · Spring Boot · MySQL · Angular · TypeScript · Flutter · Dart · Python · PyTorch · Linux · Git · GitHub
+[![Boot.dev Learn Git 2 certificate](https://qvault-webapp-dynamic-assets.storage.googleapis.com/certificates/ef52daa2-ea6a-463e-b8d7-b824a79d38ed.jpeg?v=1785204406)](https://www.boot.dev/certificates/ef52daa2-ea6a-463e-b8d7-b824a79d38ed)
 ```
 
 <div align="center">
