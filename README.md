@@ -35,6 +35,8 @@ $ skills
 ```
 [![Boot.dev Learn Git 2 certificate](https://qvault-webapp-dynamic-assets.storage.googleapis.com/certificates/ef52daa2-ea6a-463e-b8d7-b824a79d38ed.jpeg?v=1785204406)](https://www.boot.dev/certificates/ef52daa2-ea6a-463e-b8d7-b824a79d38ed)
 
+[![Boot.dev Learn Docker certificate](https://qvault-webapp-dynamic-assets.storage.googleapis.com/certificates/c579251a-4f62-4e2b-9495-37583eac14ed.jpeg?v=1785873153)](https://www.boot.dev/certificates/c579251a-4f62-4e2b-9495-37583eac14ed)
+
 <div align="center">
 
 <a href="https://skillicons.dev"><img src="https://skillicons.dev/icons?i=java,spring,mysql,angular,typescript,flutter,dart,python,pytorch,linux,git,github" height="35" /></a>
