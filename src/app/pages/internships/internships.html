@@ -1,0 +1,103 @@
+<div class="min-h-screen text-[var(--text-primary)] pt-28 sm:pt-32 pb-16 transition-colors duration-300 relative overflow-hidden">
+  <div class="absolute inset-0 bg-grid pointer-events-none opacity-[0.015]"></div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div class="page-header text-center mb-12">
+      <span class="inline-block px-3 py-1 rounded-full text-xs font-medium glass text-[var(--text-muted)] mb-4">Experience</span>
+      <h1 class="text-section font-bold mb-3"><span class="gradient-text">{{ 'about.internships' | t }}</span></h1>
+    </div>
+
+    @if (loading()) {
+      <div class="space-y-6">
+        @for (_ of [1, 2, 3]; track _) {
+          <div class="glass-card rounded-2xl p-6 sm:p-8">
+            <app-skeleton variant="row" />
+          </div>
+        }
+      </div>
+    } @else if (error()) {
+      <div class="glass-card rounded-2xl p-12 text-center">
+        <div class="w-16 h-16 mx-auto rounded-2xl glass flex items-center justify-center text-2xl mb-6">⚠️</div>
+        <p class="text-body text-[var(--text-muted)] mb-2">Failed to load internships.</p>
+        <button (click)="retry()" class="mt-2 btn-secondary text-sm">Try again</button>
+      </div>
+    } @else {
+    <div #grid class="space-y-6">
+      @for (item of internships(); track item.id) {
+        <div tilt3d class="internship-card glass-card rounded-2xl p-6 sm:p-8 border border-[var(--border)] relative overflow-hidden">
+          @if ($first) {
+            <div class="absolute top-0 right-0">
+              <span class="block px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white" style="background: var(--gradient-1);">
+                {{ item.endDate ? 'Recent' : 'Current' }}
+              </span>
+            </div>
+          }
+          <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div class="flex-1">
+              <h2 class="text-xl font-bold text-[var(--text-primary)]">{{ item.position }}</h2>
+              <p class="text-base text-[var(--primary)] font-medium mt-0.5">
+                @if (item.companyUrl) {
+                  <div class="flex items-center gap-2">
+                    <a [href]="item.companyUrl" target="_blank" rel="noopener" class="hover:underline">
+                      {{ item.company }} <svg class="w-3.5 h-3.5 inline ml-0.5 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
+                    <button (click)="openPreview(item.companyUrl!)" class="px-2.5 py-1 text-[10px] font-medium rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 hover:bg-[var(--primary)]/20 transition-colors">
+                      Preview
+                    </button>
+                  </div>
+                } @else {
+                  {{ item.company }}
+                }
+              </p>
+            </div>
+            <span class="text-xs text-[var(--text-muted)] whitespace-nowrap">{{ item.startDate }}{{ item.endDate ? ' — ' + item.endDate : '' }}</span>
+          </div>
+
+          @if (item.description) {
+            <p class="text-sm text-[var(--text-secondary)] mt-3 leading-relaxed">{{ item.description }}</p>
+          }
+
+          <div class="flex flex-wrap items-center gap-2 mt-4">
+            @for (tech of item.technologies; track tech) {
+              <span class="px-2.5 py-1 rounded-lg text-xs font-medium bg-[var(--primary)]/5 text-[var(--primary)] border border-[var(--primary)]/20">{{ tech }}</span>
+            }
+          </div>
+
+          @if (item.projectId) {
+            @for (p of allProjects; track p.id) {
+              @if (p.id === item.projectId) {
+                <div class="mt-4 pt-4 border-t border-[var(--border)] flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                  <span>Related project: <a [routerLink]="['/projects', p.id]" class="text-[var(--primary)] hover:underline">{{ p['title'] }}</a></span>
+                </div>
+              }
+            }
+          }
+        </div>
+      } @empty {
+        <div class="text-center py-20">
+          <div class="w-16 h-16 mx-auto rounded-2xl glass flex items-center justify-center text-2xl mb-6">💼</div>
+          <p class="text-body text-[var(--text-muted)]">No internships yet.</p>
+        </div>
+      }
+    </div>
+    }
+  </div>
+
+  @if (previewUrl()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4" (click)="closePreview()">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="relative w-full max-w-4xl h-[80vh] glass-card rounded-2xl overflow-hidden border border-[var(--border)]" (click)="$event.stopPropagation()">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--bg-card)]">
+          <span class="text-sm text-[var(--text-muted)] truncate">{{ previewUrl() }}</span>
+          <button (click)="closePreview()" class="p-1.5 rounded-lg hover:bg-[var(--primary)]/10 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        @if (safePreviewUrl()) {
+          <iframe [src]="safePreviewUrl()" class="w-full h-full bg-white" loading="lazy"></iframe>
+        }
+      </div>
+    </div>
+  }
+</div>

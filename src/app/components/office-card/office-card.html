@@ -1,0 +1,63 @@
+<div class="office-wrap flex flex-col items-center">
+  <div class="flex flex-col items-center">
+    <div class="w-2.5 h-2.5 rounded-full glass border border-[var(--border)]"></div>
+    <div class="w-px h-7 bg-[var(--border)]"></div>
+    <div class="w-12 h-2 rounded-full glass border border-[var(--border)]"></div>
+  </div>
+
+  <div #card class="office-card origin-top cursor-pointer select-none relative z-10" (mouseenter)="startSwing()" (mouseleave)="stopSwing()">
+    <div class="relative w-72 sm:w-80">
+      <!-- ambient gradient orbs for depth -->
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full blur-2xl pointer-events-none opacity-40"
+           style="background: radial-gradient(circle, var(--primary) 0%, transparent 70%);"></div>
+      <div class="absolute -bottom-10 -right-8 w-40 h-40 rounded-full blur-2xl pointer-events-none opacity-30"
+           style="background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);"></div>
+      <div class="absolute top-1/2 -right-10 w-28 h-28 rounded-full blur-2xl pointer-events-none opacity-20"
+           style="background: radial-gradient(circle, var(--accent) 0%, transparent 70%);"></div>
+
+      <div class="relative glass-card rounded-3xl border border-[var(--border)] overflow-hidden shadow-2xl"
+           style="box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6), 0 0 40px -12px var(--glow);">
+        <!-- top hairline gradient -->
+        <div class="absolute top-0 inset-x-0 h-px z-20 pointer-events-none"
+             style="background: linear-gradient(90deg, transparent, var(--primary-light), transparent);"></div>
+
+        <!-- photo layer -->
+        <div class="relative">
+          <img src="avatar/profile.jpg" alt="Mohanned Zayoud" class="w-full h-56 sm:h-64 object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] via-[var(--bg-card)]/30 to-transparent"></div>
+
+          <!-- open-to-work badge -->
+          <div class="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full glass text-xs font-medium text-emerald-400 border border-emerald-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Open to work
+          </div>
+
+          <!-- status bar -->
+          <div class="absolute bottom-3 left-3 right-3 flex items-center gap-2 rounded-xl glass border border-[var(--border)] px-3 py-2">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+            </span>
+            <span class="text-[11px] text-[var(--text-secondary)]">Available for new projects</span>
+          </div>
+        </div>
+
+        <!-- info layer -->
+        <div class="relative z-10 p-4 sm:p-5">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <h3 class="text-lg font-bold text-[var(--text-primary)]">Mohanned Zayoud</h3>
+            <span class="w-2 h-2 rounded-full bg-[var(--secondary)]/70"></span>
+          </div>
+          <p class="text-sm gradient-text font-semibold">Full Stack Developer</p>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3 text-xs text-[var(--text-muted)]">
+            <span class="inline-flex items-center gap-1">📍 Tunisia</span>
+            <span class="inline-flex items-center gap-1">💼 Remote-ready</span>
+            <span class="inline-flex items-center gap-1">☕ Coffee-powered</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-5 text-xs text-[var(--text-muted)] text-center max-w-[280px]">Hover or tap me to peek my summary</p>
+</div>

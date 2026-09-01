@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "mohannedportflio"
+  },
+  "targets": {
+    "mohannedportflio": {
+      "hosting": {
+        "mohannedzayoud": [
+          "mohannedzayoud"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

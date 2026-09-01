@@ -1,0 +1,191 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files
+
+# for more about ignoring files.
+
+# ==========================================
+
+# Compiled output
+
+# ==========================================
+
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# ==========================================
+
+# Node
+
+# ==========================================
+
+/node_modules
+npm-debug.log
+npm-debug.log*
+yarn-error.log
+yarn-debug.log*
+pnpm-debug.log*
+
+# ==========================================
+
+# IDEs and editors
+
+# ==========================================
+
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# ==========================================
+
+# Visual Studio Code
+
+# ==========================================
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+
+.history/*
+
+# ==========================================
+
+# Angular / Miscellaneous
+
+# ==========================================
+
+/.angular/cache
+.sass-cache/
+.connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+**screenshots**/
+
+# ==========================================
+
+# AI tools
+
+# ==========================================
+
+.agents/
+.aider-desk/
+.augment/
+.autohand/
+.bob/
+.claude/
+.codeartsdoer/
+.codebuddy/
+.codemaker/
+.codestudio/
+.commandcode/
+.continue/
+.cortex/
+.crush/
+.devin/
+.factory/
+.forge/
+.goose/
+.hermes/
+.inferencesh/
+.jazz/
+.openhands/
+.windsurf/
+
+# AI / project-specific directories
+
+skills/
+data/
+dataconnect/
+.firebase/
+
+# Other generated / AI files
+
+...header.html
+skills-lock.json
+
+# ==========================================
+
+# Environment variables & secrets
+
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+# Local environment files
+
+src/app/environment/environment.local.ts
+src/app/environment/environment.development.local.ts
+src/app/environment/environment.production.local.ts
+
+# Service account credentials
+
+service-account*.json
+*-service-account*.json
+firebase-adminsdk*.json
+*serviceAccount*.json
+
+# ==========================================
+
+# Firebase
+
+# ==========================================
+
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# ==========================================
+
+# Logs
+
+# ==========================================
+
+*.log
+
+# ==========================================
+
+# Cache
+
+# ==========================================
+
+.cache/
+.parcel-cache/
+.nyc_output/
+
+# ==========================================
+
+# Temporary / backup files
+
+# ==========================================
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.backup
+*.orig
+*.rej
+
+# ==========================================
+
+# System files
+
+# ==========================================
+
+.DS_Store
+Thumbs.db
+desktop.ini

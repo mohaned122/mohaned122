@@ -1,0 +1,12 @@
+<div class="loading-screen" [class.hidden]="!loading()">
+  <img src="logos/logo_ico_tab.png" alt="M" class="loading-logo" />
+</div>
+<app-animated-bg />
+<div class="relative" style="z-index: 1;">
+  <app-header />
+  <main [@routeFlip]="routeState">
+    <router-outlet />
+  </main>
+  <app-footer />
+  <app-chatbot />
+</div>

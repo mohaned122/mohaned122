@@ -1,0 +1,752 @@
+<div class="min-h-screen text-[var(--text-primary)] pt-20 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    @if (!isLoggedIn()) {
+      <div class="max-w-md mx-auto bg-[var(--bg-card)] rounded-2xl p-8 border border-[var(--border)]">
+        <h1 class="text-2xl font-bold text-[var(--text-primary)] mb-6 text-center">{{ 'admin.login' | t }}</h1>
+        <div class="space-y-4">
+          <input
+            type="email"
+            [placeholder]="'admin.email' | t"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-3 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+          />
+          <input
+            type="password"
+            [placeholder]="'admin.password' | t"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-3 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+          />
+          <button (click)="login()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+            {{ 'admin.loginBtn' | t }}
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold text-[var(--text-primary)]">{{ 'admin.dashboard' | t }}</h1>
+      </div>
+
+      @if (adminNav.activeTab() === 'projects') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">{{ editing() ? ('admin.editProject' | t) : ('admin.addProject' | t) }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              [placeholder]="'admin.title' | t"
+              [ngModel]="title()"
+              (ngModelChange)="title.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              [placeholder]="'admin.category' | t"
+              [ngModel]="category()"
+              (ngModelChange)="category.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div class="md:col-span-2">
+              <textarea
+                placeholder="Problem"
+                [ngModel]="problem()"
+                (ngModelChange)="problem.set($event)"
+                rows="3"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              ></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <textarea
+                placeholder="Solution (for detail page, optional)"
+                [ngModel]="solution()"
+                (ngModelChange)="solution.set($event)"
+                rows="5"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              ></textarea>
+            </div>
+            <div class="md:col-span-2 flex items-center gap-2">
+              <input
+                type="checkbox"
+                [ngModel]="featured()"
+                (ngModelChange)="featured.set($event)"
+                id="featured"
+                class="w-4 h-4 rounded border-[var(--border)] bg-[var(--bg-hover)] text-blue-600 focus:ring-blue-500"
+              />
+              <label for="featured" class="text-sm text-[var(--text-muted)]">Featured Project</label>
+            </div>
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">Image (choose file)</label>
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onImageFileSelected($event)"
+                class="w-full text-[var(--text-primary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-sm"
+              />
+              @if (imageFile()) {
+                <p class="text-xs text-[var(--text-secondary)] mt-1">{{ imageFile()?.name }}</p>
+              }
+            </div>
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">Gallery (choose multiple)</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                (change)="onGalleryFilesSelected($event)"
+                class="w-full text-[var(--text-primary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-sm"
+              />
+              @if (galleryFiles().length) {
+                <p class="text-xs text-[var(--text-secondary)] mt-1">{{ galleryFiles().length }} file(s) selected</p>
+              }
+            </div>
+            <div class="md:col-span-2 flex flex-wrap gap-2">
+              @for (url of galleryUrls(); track url) {
+                <div class="w-16 h-16 rounded-lg overflow-hidden border border-[var(--border)]">
+                  <img [src]="url" class="w-full h-full object-cover" />
+                </div>
+              }
+            </div>
+            <input
+              [placeholder]="'admin.github' | t"
+              [ngModel]="github()"
+              (ngModelChange)="github.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              [placeholder]="'admin.live' | t"
+              [ngModel]="live()"
+              (ngModelChange)="live.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              placeholder="Download link (optional)"
+              [ngModel]="downloadLink()"
+              (ngModelChange)="downloadLink.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div class="md:col-span-2">
+              <div class="flex gap-2 mb-2">
+                <input
+                  [placeholder]="'admin.tech' | t"
+                  [ngModel]="techInput()"
+                  (ngModelChange)="techInput.set($event)"
+                  (keyup.enter)="addTech()"
+                  class="flex-1 bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+                />
+                <button (click)="addTech()" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">{{ 'admin.techAdd' | t }}</button>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                @for (tech of technologies(); track tech) {
+                  <span class="px-3 py-1 bg-blue-900/50 text-blue-300 rounded-full text-sm flex items-center gap-2">
+                    {{ tech }}
+                    <button (click)="removeTech(tech)" class="text-red-400 hover:text-red-300">&times;</button>
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button (click)="saveProject()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+              {{ editing() ? ('admin.update' | t) : ('admin.save' | t) }}
+            </button>
+            @if (editing()) {
+              <button (click)="resetForm()" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">{{ 'admin.cancel' | t }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.title' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.category' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Technologies</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (project of projects(); track project.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ project.title }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)]">{{ project.category }}</td>
+                  <td class="px-4 py-3">
+                    <div class="flex flex-wrap gap-1">
+                      @for (tech of project.technologies; track tech) {
+                        <span class="px-2 py-0.5 bg-[var(--bg-hover)] rounded text-xs text-[var(--text-secondary)]">{{ tech }}</span>
+                      }
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="editProject(project)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">{{ 'admin.edit' | t }}</button>
+                    <button (click)="deleteProject(project.id!)" class="text-red-400 hover:text-red-300 text-sm">{{ 'admin.delete' | t }}</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="px-4 py-8 text-center text-[var(--text-muted)]">{{ 'admin.empty' | t }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'gallery') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">{{ 'admin.addGallery' | t }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              [placeholder]="'admin.title' | t"
+              [ngModel]="galleryTitle()"
+              (ngModelChange)="galleryTitle.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              [placeholder]="'admin.gallery.category' | t"
+              [ngModel]="galleryCategory()"
+              (ngModelChange)="galleryCategory.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div class="md:col-span-2">
+              <label class="block text-sm text-[var(--text-muted)] mb-1">{{ 'admin.image' | t }}</label>
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onGalleryFileSelected($event)"
+                class="w-full text-[var(--text-primary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-sm"
+              />
+              @if (galleryFile()) {
+                <p class="text-xs text-[var(--text-secondary)] mt-1">{{ galleryFile()?.name }}</p>
+              }
+            </div>
+            <div class="md:col-span-2">
+              <textarea
+                [placeholder]="'admin.description' | t"
+                [ngModel]="galleryDescription()"
+                (ngModelChange)="galleryDescription.set($event)"
+                rows="2"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              ></textarea>
+            </div>
+          </div>
+          <button (click)="saveGalleryItem()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mt-4" [disabled]="galleryUploading()">
+            {{ galleryUploading() ? 'Uploading...' : ('admin.save' | t) }}
+          </button>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.title' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.gallery.category' | t }}</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of galleryItems(); track item.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ item.title }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ item.category }}</td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="deleteGalleryItem(item.id!)" class="text-red-400 hover:text-red-300 text-sm">{{ 'admin.delete' | t }}</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="3" class="px-4 py-8 text-center text-[var(--text-muted)]">{{ 'admin.gallery.empty' | t }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'certificates') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">{{ certEditing() ? ('admin.editCertificate' | t) : ('admin.addCertificate' | t) }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              [placeholder]="'admin.title' | t"
+              [ngModel]="certTitle()"
+              (ngModelChange)="certTitle.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              [placeholder]="'admin.cert.issuer' | t"
+              [ngModel]="certIssuer()"
+              (ngModelChange)="certIssuer.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              [placeholder]="'admin.cert.date' | t"
+              [ngModel]="certDate()"
+              (ngModelChange)="certDate.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">{{ 'admin.image' | t }} (PDF or image)</label>
+              <input
+                type="file"
+                accept="image/*,application/pdf"
+                (change)="onCertFileSelected($event)"
+                class="w-full text-[var(--text-primary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-sm"
+              />
+              @if (certFile()) {
+                <p class="text-xs text-[var(--text-secondary)] mt-1">{{ certFile()?.name }}</p>
+              }
+            </div>
+            <input
+              [placeholder]="'admin.cert.link' | t"
+              [ngModel]="certLink()"
+              (ngModelChange)="certLink.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div class="md:col-span-2">
+              <textarea
+                [placeholder]="'admin.description' | t"
+                [ngModel]="certDescription()"
+                (ngModelChange)="certDescription.set($event)"
+                rows="2"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              ></textarea>
+            </div>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button (click)="saveCertificate()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg" [disabled]="certUploading()">
+              {{ certUploading() ? 'Uploading...' : (certEditing() ? ('admin.update' | t) : ('admin.save' | t)) }}
+            </button>
+            @if (certEditing()) {
+              <button (click)="resetCertificateForm()" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">{{ 'admin.cancel' | t }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.title' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.cert.issuer' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.cert.date' | t }}</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cert of certs(); track cert.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ cert.title }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ cert.issuer }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ cert.date }}</td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="editCertificate(cert)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">{{ 'admin.edit' | t }}</button>
+                    <button (click)="deleteCertificate(cert.id!)" class="text-red-400 hover:text-red-300 text-sm">{{ 'admin.delete' | t }}</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="px-4 py-8 text-center text-[var(--text-muted)]">{{ 'admin.certificates.empty' | t }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'articles') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">{{ articleEditing() ? ('admin.editArticle' | t) : ('admin.addArticle' | t) }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              [placeholder]="'admin.title' | t"
+              [ngModel]="articleTitle()"
+              (ngModelChange)="articleTitle.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              type="date"
+              [ngModel]="articleDate()"
+              (ngModelChange)="articleDate.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div class="md:col-span-2">
+              <textarea
+                [placeholder]="'admin.content' | t"
+                [ngModel]="articleContent()"
+                (ngModelChange)="articleContent.set($event)"
+                rows="6"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              ></textarea>
+            </div>
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">{{ 'admin.type' | t }}</label>
+              <select
+                [ngModel]="articleType()"
+                (ngModelChange)="articleType.set($event)"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              >
+                <option value="Article">Article</option>
+                <option value="News">News</option>
+              </select>
+            </div>
+            <input
+              [placeholder]="'admin.url' | t"
+              [ngModel]="articleUrl()"
+              (ngModelChange)="articleUrl.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">{{ 'admin.image' | t }} (for Articles)</label>
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onArticleFileSelected($event)"
+                class="w-full text-[var(--text-primary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-sm"
+              />
+              @if (articleImageFile()) {
+                <p class="text-xs text-[var(--text-secondary)] mt-1">{{ articleImageFile()?.name }}</p>
+              }
+            </div>
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">Locked until (for countdown)</label>
+              <input
+                type="datetime-local"
+                [ngModel]="articleLockedUntil()"
+                (ngModelChange)="articleLockedUntil.set($event)"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button (click)="saveArticle()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+              {{ articleEditing() ? ('admin.update' | t) : ('admin.save' | t) }}
+            </button>
+            @if (articleEditing()) {
+              <button (click)="resetArticleForm()" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">{{ 'admin.cancel' | t }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.title' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.type' | t }}</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.date' | t }}</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of articles(); track a.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ a.title }}</td>
+                  <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs" [class.bg-yellow-500/10]="a.type==='News'" [class.text-yellow-400]="a.type==='News'" [class.bg-blue-500/10]="a.type==='Article'" [class.text-blue-400]="a.type==='Article'">{{ a.type }}</span></td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ a.date }}</td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="editArticle(a)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">{{ 'admin.edit' | t }}</button>
+                    <button (click)="deleteArticle(a.id!)" class="text-red-400 hover:text-red-300 text-sm">{{ 'admin.delete' | t }}</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="px-4 py-8 text-center text-[var(--text-muted)]">{{ 'admin.articles.empty' | t }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'education') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">{{ eduEditing() ? 'Edit Education' : 'Add Education' }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              placeholder="Title *"
+              [ngModel]="eduTitle()"
+              (ngModelChange)="eduTitle.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              placeholder="Institution *"
+              [ngModel]="eduInstitution()"
+              (ngModelChange)="eduInstitution.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              placeholder="Degree (e.g. Bachelor)"
+              [ngModel]="eduDegree()"
+              (ngModelChange)="eduDegree.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              placeholder="Field (e.g. Software Engineering)"
+              [ngModel]="eduField()"
+              (ngModelChange)="eduField.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              type="text"
+              placeholder="Start date (e.g. Sep 2022)"
+              [ngModel]="eduStartDate()"
+              (ngModelChange)="eduStartDate.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              type="text"
+              placeholder="End date (leave empty if ongoing)"
+              [ngModel]="eduEndDate()"
+              (ngModelChange)="eduEndDate.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
+              placeholder="Grade (e.g. 3.8 GPA)"
+              [ngModel]="eduGrade()"
+              (ngModelChange)="eduGrade.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div class="md:col-span-2">
+              <textarea
+                placeholder="Description (optional)"
+                [ngModel]="eduDescription()"
+                (ngModelChange)="eduDescription.set($event)"
+                rows="3"
+                class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+              ></textarea>
+            </div>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button (click)="saveEducation()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+              {{ eduEditing() ? 'Update' : 'Save' }}
+            </button>
+            @if (eduEditing()) {
+              <button (click)="resetEducationForm()" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">Cancel</button>
+            }
+          </div>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Title</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Institution</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Period</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of educationList(); track item.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ item.title }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ item.institution }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ item.startDate }}@if (item.endDate) { — {{ item.endDate }} }</td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="editEducation(item)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">Edit</button>
+                    <button (click)="deleteEducation(item.id!)" class="text-red-400 hover:text-red-300 text-sm">Delete</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="px-4 py-8 text-center text-[var(--text-muted)]">No education entries yet.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'internship') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">{{ internEditing() ? 'Edit Internship' : 'Add Internship' }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input placeholder="Company *" [ngModel]="internCompany()" (ngModelChange)="internCompany.set($event)" class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500" />
+            <input placeholder="Position *" [ngModel]="internPosition()" (ngModelChange)="internPosition.set($event)" class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500" />
+            <input type="text" placeholder="Start date (e.g. Jun 2025)" [ngModel]="internStartDate()" (ngModelChange)="internStartDate.set($event)" class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500" />
+            <input type="text" placeholder="End date (leave empty if ongoing)" [ngModel]="internEndDate()" (ngModelChange)="internEndDate.set($event)" class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500" />
+            <div class="md:col-span-2">
+              <textarea placeholder="Description (optional)" [ngModel]="internDescription()" (ngModelChange)="internDescription.set($event)" rows="3" class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <div class="flex gap-2 mb-2">
+                <input placeholder="Technologies used" [ngModel]="internTechInput()" (ngModelChange)="internTechInput.set($event)" (keyup.enter)="internAddTech()" class="flex-1 bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500" />
+                <button (click)="internAddTech()" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">Add</button>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                @for (tech of internTechnologies(); track tech) {
+                  <span class="px-3 py-1 bg-blue-900/50 text-blue-300 rounded-full text-sm flex items-center gap-2">
+                    {{ tech }}
+                    <button (click)="internRemoveTech(tech)" class="text-red-400 hover:text-red-300">&times;</button>
+                  </span>
+                }
+              </div>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm text-[var(--text-muted)] mb-1">Link to project (optional)</label>
+              <select [ngModel]="internProjectId()" (ngModelChange)="internProjectId.set($event)" class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500">
+                <option value="">— None —</option>
+                @for (p of projects(); track p.id) {
+                  <option [value]="p.id">{{ p.title }}</option>
+                }
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <input placeholder="Company URL (optional - LinkedIn, website, etc.)" [ngModel]="internCompanyUrl()" (ngModelChange)="internCompanyUrl.set($event)" class="w-full bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500" />
+            </div>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button (click)="saveInternship()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+              {{ internEditing() ? 'Update' : 'Save' }}
+            </button>
+            @if (internEditing()) {
+              <button (click)="resetInternshipForm()" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">Cancel</button>
+            }
+          </div>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Company</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Position</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Period</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Linked Project</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">URL</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of internships(); track item.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ item.company }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ item.position }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ item.startDate }}@if (item.endDate) { — {{ item.endDate }} }</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ getProjectTitle(item.projectId) }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">@if (item.companyUrl) { {{ item.companyUrl }} }</td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="editInternship(item)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">Edit</button>
+                    <button (click)="deleteInternship(item.id!)" class="text-red-400 hover:text-red-300 text-sm">Delete</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="px-4 py-8 text-center text-[var(--text-muted)]">No internships yet.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'music') {
+        <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)] mb-8">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">Add Song</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              placeholder="Song title *"
+              [ngModel]="songTitle()"
+              (ngModelChange)="songTitle.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <div>
+              <label class="block text-sm text-[var(--text-muted)] mb-1">Audio file * (MP3, OGG, WAV)</label>
+              <input
+                type="file"
+                accept="audio/*"
+                (change)="onSongFileSelected($event)"
+                class="w-full text-[var(--text-primary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-sm"
+              />
+              @if (songAudioFile()) {
+                <p class="text-xs text-[var(--text-secondary)] mt-1">{{ songAudioFile()?.name }} ({{ (songAudioFile()?.size ?? 0) > 1048576 ? ((songAudioFile()?.size ?? 0) / 1048576).toFixed(1) + ' MB' : ((songAudioFile()?.size ?? 0) / 1024).toFixed(1) + ' KB' }})</p>
+              }
+            </div>
+          </div>
+          <button (click)="saveSong()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mt-4" [disabled]="songUploading() || !songTitle() || !songAudioFile()">
+            {{ songUploading() ? 'Uploading...' : 'Save Song' }}
+          </button>
+        </div>
+
+        <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[var(--bg-hover)]">
+              <tr>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Title</th>
+                <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of songs(); track s.id) {
+                <tr class="border-t border-[var(--border)]">
+                  <td class="px-4 py-3 text-[var(--text-primary)]">{{ s.title }}</td>
+                  <td class="px-4 py-3 text-right">
+                    <button (click)="deleteSong(s.id!)" class="text-red-400 hover:text-red-300 text-sm">Delete</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="2" class="px-4 py-8 text-center text-[var(--text-muted)]">No songs yet. Upload your first song above!</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (adminNav.activeTab() === 'messages') {
+        <div class="grid grid-cols-1 gap-4">
+          @if (selectedMessage()) {
+            <div class="bg-[var(--bg-card)] rounded-xl p-6 border border-[var(--border)]">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="text-lg font-semibold text-[var(--text-primary)]">{{ selectedMessage()?.subject }}</h3>
+                  <p class="text-sm text-[var(--text-muted)]">{{ selectedMessage()?.name }} &lt;{{ selectedMessage()?.email }}&gt;</p>
+                </div>
+                <button (click)="closeView()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)]">&times;</button>
+              </div>
+              <p class="text-[var(--text-secondary)] whitespace-pre-wrap">{{ selectedMessage()?.message }}</p>
+              <div class="flex gap-3 mt-4">
+                <a [href]="'mailto:' + selectedMessage()?.email" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">Reply via Email</a>
+                <button (click)="deleteMessage(selectedMessage()!.id!)" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">{{ 'admin.delete' | t }}</button>
+              </div>
+            </div>
+          }
+
+          <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden">
+            <table class="w-full">
+              <thead class="bg-[var(--bg-hover)]">
+                <tr>
+                  <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.messages.name' | t }}</th>
+                  <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.messages.email' | t }}</th>
+                  <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.messages.subject' | t }}</th>
+                  <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.messages.date' | t }}</th>
+                  <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">{{ 'admin.actions' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (msg of messages(); track msg.id) {
+                  <tr class="border-t border-[var(--border)]" [class.opacity-60]="msg.read">
+                    <td class="px-4 py-3 text-[var(--text-primary)]">{{ msg.name }}</td>
+                    <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ msg.email }}</td>
+                    <td class="px-4 py-3 text-[var(--text-secondary)] text-sm">{{ msg.subject }}</td>
+                    <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ formatDate(msg.createdAt) }}</td>
+                    <td class="px-4 py-3 text-right">
+                      <button (click)="viewMessage(msg)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">{{ 'admin.messages.view' | t }}</button>
+                      @if (!msg.read) {
+                        <button (click)="markRead(msg.id!)" class="text-emerald-400 hover:text-emerald-300 mr-3 text-sm">{{ 'admin.messages.read' | t }}</button>
+                      }
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-[var(--text-muted)]">{{ 'admin.messages.empty' | t }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

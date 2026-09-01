@@ -1,0 +1,129 @@
+<nav #nav class="fixed top-0 left-0 right-0 z-50 flex justify-center pt-3 sm:pt-4 px-4 transition-all duration-300" [class.top-3]="scrolled" [class.top-4]="!scrolled">
+  <div class="glass rounded-2xl sm:rounded-3xl px-3 sm:px-6 lg:px-8 transition-all duration-300 w-full max-w-5xl relative"
+       [class.py-2]="scrolled"
+       [class.py-3]="!scrolled"
+       [class.shadow-2xl]="scrolled"
+       [class.shadow-lg]="!scrolled">
+    <div class="flex items-center justify-between">
+      <a routerLink="/" class="flex items-center gap-2 flex-shrink-0">
+        <img src="logos/logo_ico_tab.png" alt="Mohanned Zayoud" class="h-10 w-auto transition-all duration-300" [class.h-8]="scrolled" />
+      </a>
+
+      <div class="hidden md:flex items-center gap-1 lg:gap-2">
+        <a routerLink="/" routerLinkActive="text-[var(--primary)]!" [routerLinkActiveOptions]="{exact:true}" class="nav-link px-3 lg:px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-300 relative">
+          {{ 'nav.about' | t }}
+          @if (router.url === '/' || router.url === '/about') {
+            <span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-[var(--primary)]"></span>
+          }
+        </a>
+        <a routerLink="/projects" routerLinkActive="text-[var(--primary)]!" class="nav-link px-3 lg:px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-300">
+          {{ 'nav.projects' | t }}
+        </a>
+        <a routerLink="/gallery" routerLinkActive="text-[var(--primary)]!" class="nav-link px-3 lg:px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-300">
+          {{ 'nav.gallery' | t }}
+        </a>
+        <a routerLink="/certificates" routerLinkActive="text-[var(--primary)]!" class="nav-link px-3 lg:px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-300">
+          {{ 'nav.certificates' | t }}
+        </a>
+        <a routerLink="/articles" routerLinkActive="text-[var(--primary)]!" class="nav-link px-3 lg:px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-300">
+          {{ 'nav.articles' | t }}
+        </a>
+        <a routerLink="/internships" routerLinkActive="text-[var(--primary)]!" class="nav-link px-3 lg:px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-300">
+          {{ 'nav.internships' | t }}
+        </a>
+        <a routerLink="/contact" class="nav-cta ml-2 px-4 py-2 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg" style="background: var(--gradient-1); box-shadow: 0 0 16px var(--glow);">
+          {{ 'nav.hireMe' | t }}
+        </a>
+      </div>
+
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <div class="relative">
+          <button (click)="toggleLang()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl glass text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all duration-300">
+            <span>{{ ts.lang() === 'en' ? '🇬🇧' : ts.lang() === 'fr' ? '🇫🇷' : '🇸🇦' }}</span>
+            <span class="hidden sm:inline">{{ ts.lang().toUpperCase() }}</span>
+          </button>
+          @if (langOpen) {
+            <div class="absolute right-0 mt-2 w-32 glass rounded-xl shadow-2xl overflow-hidden z-50">
+              @for (l of ['en', 'fr', 'ar']; track l) {
+                <button (click)="setLang(l)" class="w-full px-3 py-2.5 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200 text-left flex items-center gap-2">
+                  <span>{{ l === 'en' ? '🇬🇧' : l === 'fr' ? '🇫🇷' : '🇸🇦' }}</span>
+                  <span>{{ l === 'en' ? 'English' : l === 'fr' ? 'Français' : 'العربية' }}</span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <button (click)="toggleTheme()" class="p-2 rounded-xl glass text-[var(--text-muted)] hover:text-[var(--primary)] transition-all duration-300" [attr.aria-label]="'Toggle theme'">
+          @if (themeService.theme() === 'dark') {
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          } @else {
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+          }
+        </button>
+
+        <button (click)="toggleMobile()" class="md:hidden p-2 rounded-xl glass text-[var(--text-muted)] hover:text-[var(--primary)] transition-all duration-300" [attr.aria-label]="'Menu'">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            @if (!mobileOpen) {
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            } @else {
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            }
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    @if (isAdmin()) {
+      <hr class="border-[var(--border)] my-2" />
+      <div class="flex items-center justify-center gap-0.5 overflow-x-auto pb-1">
+        <button (click)="adminNav.activeTab.set('projects')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'projects'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'projects'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'projects'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'projects'">
+          Projects
+        </button>
+        <button (click)="adminNav.activeTab.set('messages')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all relative" [class.bg-white/10]="adminNav.activeTab() === 'messages'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'messages'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'messages'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'messages'">
+          Messages
+          @if (adminNav.messageCount() > 0) {
+            <span class="ml-1 w-4 h-4 bg-red-500 rounded-full text-white text-[10px] inline-flex items-center justify-center">{{ adminNav.messageCount() }}</span>
+          }
+        </button>
+        <button (click)="adminNav.activeTab.set('gallery')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'gallery'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'gallery'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'gallery'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'gallery'">
+          Gallery
+        </button>
+        <button (click)="adminNav.activeTab.set('certificates')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'certificates'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'certificates'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'certificates'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'certificates'">
+          Certificates
+        </button>
+        <button (click)="adminNav.activeTab.set('articles')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'articles'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'articles'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'articles'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'articles'">
+          Articles
+        </button>
+        <button (click)="adminNav.activeTab.set('education')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'education'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'education'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'education'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'education'">
+          Education
+        </button>
+        <button (click)="adminNav.activeTab.set('internship')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'internship'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'internship'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'internship'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'internship'">
+          Internship
+        </button>
+        <button (click)="adminNav.activeTab.set('music')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all" [class.bg-white/10]="adminNav.activeTab() === 'music'" [class.text-[var(--text-primary)]]="adminNav.activeTab() === 'music'" [class.text-[var(--text-muted)]]="adminNav.activeTab() !== 'music'" [class.hover:text-[var(--text-primary)]]="adminNav.activeTab() !== 'music'">
+          Music
+        </button>
+      </div>
+    }
+
+    @if (mobileOpen) {
+      <div class="md:hidden pt-3 pb-2 space-y-1 border-t border-white/5 mt-3">
+        <a routerLink="/" (click)="mobileOpen=false" class="block px-3 py-2.5 rounded-xl text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200">{{ 'nav.about' | t }}</a>
+        <a routerLink="/projects" (click)="mobileOpen=false" class="block px-3 py-2.5 rounded-xl text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200">{{ 'nav.projects' | t }}</a>
+        <a routerLink="/gallery" (click)="mobileOpen=false" class="block px-3 py-2.5 rounded-xl text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200">{{ 'nav.gallery' | t }}</a>
+        <a routerLink="/certificates" (click)="mobileOpen=false" class="block px-3 py-2.5 rounded-xl text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200">{{ 'nav.certificates' | t }}</a>
+        <a routerLink="/articles" (click)="mobileOpen=false" class="block px-3 py-2.5 rounded-xl text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200">{{ 'nav.articles' | t }}</a>
+        <a routerLink="/internships" (click)="mobileOpen=false" class="block px-3 py-2.5 rounded-xl text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all duration-200">{{ 'nav.internships' | t }}</a>
+        <a routerLink="/contact" (click)="mobileOpen=false" class="block w-full text-center px-3 py-2.5 rounded-full text-sm font-semibold text-white transition-all duration-200" style="background: var(--gradient-1);">{{ 'nav.hireMe' | t }}</a>
+        <button (click)="downloadCv(); mobileOpen=false" class="block w-full text-center px-3 py-2.5 rounded-full text-sm font-medium text-[var(--text-primary)] border border-[var(--border)] hover:border-[var(--primary)] transition-all duration-200">
+          {{ cvService.downloading ? ('hero.downloading' | t) : ('hero.downloadCv' | t) }}
+        </button>
+      </div>
+    }
+  </div>
+</nav>

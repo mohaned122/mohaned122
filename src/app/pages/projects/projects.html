@@ -1,0 +1,145 @@
+<div class="min-h-screen text-[var(--text-primary)] pt-28 sm:pt-32 pb-16 transition-colors duration-300 relative overflow-hidden">
+  <div class="absolute inset-0 bg-grid pointer-events-none opacity-[0.015]"></div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div class="projects-header text-center mb-10">
+      <span class="inline-block px-3 py-1 rounded-full text-xs font-medium glass text-[var(--text-muted)] mb-4">{{ 'projects.all' | t }} Projects</span>
+      <h1 class="text-section font-bold mb-3"><span class="gradient-text">{{ 'projects.title' | t }}</span></h1>
+    </div>
+
+    @if (!loading() && !error() && filteredProjects().length) {
+      <app-project-visualizer class="block mb-10" [projects]="filteredProjects()" [selectedProject]="selectedProject()" (projectSelected)="selectProject($event)"></app-project-visualizer>
+    }
+
+    <div class="text-center mb-6">
+      <span class="inline-block px-4 py-1.5 rounded-full text-xs font-medium glass text-[var(--primary)] border border-[var(--primary)]/20">{{ 'projects.definitionOfDone' | t }}</span>
+    </div>
+
+    <div #filters class="filter-bar glass rounded-2xl p-5 sm:p-6 mb-10">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="relative flex-1 group">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)] group-focus-within:text-[var(--primary)] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input
+            type="text"
+            [placeholder]="'projects.search' | t"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearch($event); applyFilters()"
+            class="w-full bg-white/5 text-[var(--text-primary)] rounded-xl pl-10 pr-4 py-3 border border-[var(--border)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-300 text-sm"
+          />
+        </div>
+        <select
+          [ngModel]="selectedCategory()"
+          (ngModelChange)="onCategoryChange($event); applyFilters()"
+          class="bg-white/5 text-[var(--text-primary)] rounded-xl px-4 py-3 border border-[var(--border)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-300 appearance-none cursor-pointer min-w-[140px] text-sm"
+        >
+          @for (cat of categories(); track cat) {
+            <option [value]="cat">{{ cat === 'All' ? ('projects.all' | t) : cat }}</option>
+          }
+        </select>
+        <select
+          [ngModel]="selectedTech()"
+          (ngModelChange)="onTechChange($event); applyFilters()"
+          class="bg-white/5 text-[var(--text-primary)] rounded-xl px-4 py-3 border border-[var(--border)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-300 appearance-none cursor-pointer min-w-[140px] text-sm"
+        >
+          @for (tech of technologies(); track tech) {
+            <option [value]="tech">{{ tech === 'All' ? ('projects.all' | t) : tech }}</option>
+          }
+        </select>
+      </div>
+
+      @if (searchTerm() || selectedCategory() !== 'All' || selectedTech() !== 'All') {
+        <div class="flex items-center gap-2 mt-4 pt-4 border-t border-[var(--border)]">
+          <span class="text-xs text-[var(--text-muted)]">Filtered: {{ filteredProjects().length }} of {{ projects().length }} projects</span>
+          <button (click)="searchTerm.set(''); selectedCategory.set('All'); selectedTech.set('All'); applyFilters()" class="ml-auto text-xs text-[var(--primary)] hover:underline transition-colors">
+            Clear filters
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+          <app-skeleton />
+        }
+      </div>
+    } @else if (error()) {
+      <div class="glass-card rounded-2xl p-12 text-center">
+        <div class="w-16 h-16 mx-auto rounded-2xl glass flex items-center justify-center text-2xl mb-6">⚠️</div>
+        <p class="text-body text-[var(--text-muted)] mb-2">Failed to load projects.</p>
+        <button (click)="retry()" class="mt-2 btn-secondary text-sm">Try again</button>
+      </div>
+    } @else {
+      <div #grid class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (project of filteredProjects(); track project.id) {
+          <a [routerLink]="['/projects', project.id]" tilt3d class="project-card group block glass-card rounded-2xl overflow-hidden cursor-pointer relative">
+            <div class="absolute -inset-px bg-gradient-to-br from-[var(--primary)]/20 via-transparent to-[var(--secondary)]/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            <div class="relative h-48 overflow-hidden">
+              @if (project.image) {
+                <img [src]="project.image" [alt]="project.title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              } @else {
+                <div class="w-full h-full bg-gradient-to-br from-[var(--primary)]/20 to-[var(--secondary)]/20 flex items-center justify-center">
+                  <span class="text-7xl font-bold text-[var(--primary)]/10 transition-all duration-500 group-hover:text-[var(--primary)]/20">{{ project.title.charAt(0) }}</span>
+                </div>
+              }
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-body)]/80 via-transparent to-transparent"></div>
+              @if (project.featured) {
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-medium bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30 flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  Featured
+                </div>
+              }
+            </div>
+            <div class="p-5 relative z-10">
+              <span class="text-xs text-[var(--primary)] font-medium uppercase tracking-wider">{{ project.category }}</span>
+              <h3 class="text-card-title font-bold mt-1 group-hover:text-[var(--primary)] transition-colors duration-300">{{ project.title }}</h3>
+              <p class="text-small text-[var(--text-muted)] mt-2 line-clamp-2 leading-relaxed">{{ project.problem }}</p>
+              <div class="flex flex-wrap gap-2 mt-4">
+                @for (tech of project.technologies.slice(0, 4); track tech) {
+                  <span class="px-2.5 py-1 rounded-lg text-xs font-medium bg-[var(--primary)]/5 text-[var(--primary)] border border-[var(--primary)]/20">{{ tech }}</span>
+                }
+                @if (project.technologies.length > 4) {
+                  <span class="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/5 text-[var(--text-muted)] border border-[var(--border)]">+{{ project.technologies.length - 4 }}</span>
+                }
+              </div>
+              <div class="flex items-center gap-4 mt-5 pt-4 border-t border-[var(--border)]">
+                <span class="text-xs text-[var(--text-muted)] flex items-center gap-1.5 transition-colors duration-300 group-hover:text-[var(--primary)]">
+                  View Details
+                  <svg class="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </span>
+                @if (project.github || project.live) {
+                  <div class="ml-auto flex gap-2" (click)="$event.stopPropagation()">
+                    @if (project.github) {
+                      <a [href]="project.github" target="_blank" class="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all" title="GitHub">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                      </a>
+                    }
+                    @if (project.live) {
+                      <a [href]="project.live" target="_blank" class="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--primary)] hover:bg-white/5 transition-all" title="Live Demo">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                        </svg>
+                      </a>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </a>
+        } @empty {
+          <div class="col-span-full text-center py-20">
+            <div class="w-16 h-16 mx-auto rounded-2xl glass flex items-center justify-center text-2xl mb-6">🔍</div>
+            <p class="text-body text-[var(--text-muted)] mb-2">{{ 'projects.empty' | t }}</p>
+            <button (click)="searchTerm.set(''); selectedCategory.set('All'); selectedTech.set('All'); applyFilters()" class="text-[var(--primary)] hover:underline text-sm transition-colors">
+              Clear all filters
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

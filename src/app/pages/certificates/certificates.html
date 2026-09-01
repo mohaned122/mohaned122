@@ -1,0 +1,97 @@
+<section #section class="min-h-screen pt-28 sm:pt-32 pb-16 px-4 sm:px-6 lg:px-12">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="inline-block px-3 py-1 rounded-full text-xs font-medium glass text-[var(--text-muted)] mb-4">Credentials</span>
+      <h1 class="text-section font-bold text-[var(--text-primary)] mb-3">{{ 'certificates.title' | t }}</h1>
+      <p class="text-body text-[var(--text-secondary)] max-w-2xl mx-auto">{{ 'certificates.subtitle' | t }}</p>
+    </div>
+
+    @if (loading()) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+          <app-skeleton />
+        }
+      </div>
+    } @else if (error()) {
+      <div class="glass-card rounded-2xl p-12 text-center">
+        <div class="w-16 h-16 mx-auto rounded-2xl glass flex items-center justify-center text-2xl mb-6">⚠️</div>
+        <p class="text-body text-[var(--text-muted)] mb-2">Failed to load certificates.</p>
+        <button (click)="retry()" class="mt-2 btn-secondary text-sm">Try again</button>
+      </div>
+    } @else if (certs().length) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div
+          *ngFor="let cert of certs()"
+          class="flip-scene glass-card rounded-2xl h-96 tab-focus"
+          tabindex="0"
+          aria-label="{{ cert.title }}. Hover or focus to flip."
+        >
+          <div class="flip-card">
+            <!-- FRONT -->
+            <div class="flip-face flip-face-front bg-gradient-to-br from-[var(--primary)]/15 via-[var(--bg-card)] to-[var(--secondary)]/15 flex flex-col">
+              <div class="flex-1 overflow-hidden relative">
+                <div *ngIf="cert.image" class="w-full h-full">
+                  <ng-container *ngIf="isPdf(cert.image); else imgBlock">
+                    <div class="w-full h-full flex flex-col items-center justify-center gap-3">
+                      <svg class="w-14 h-14 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                      <span class="text-xs font-medium text-[var(--text-secondary)]">PDF Document</span>
+                    </div>
+                  </ng-container>
+                  <ng-template #imgBlock>
+                    <img [src]="cert.image" [alt]="cert.title" class="w-full h-full object-cover" loading="lazy" />
+                  </ng-template>
+                </div>
+                <div *ngIf="!cert.image" class="w-full h-full flex flex-col items-center justify-center gap-3">
+                  <div class="w-16 h-16 rounded-2xl bg-[var(--primary)]/10 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                  </div>
+                  <span class="text-xs font-medium text-[var(--text-secondary)]">{{ cert.issuer }}</span>
+                </div>
+              </div>
+              <div class="p-5 border-t border-[var(--border)]">
+                <h3 class="text-card-title font-bold text-[var(--text-primary)]">{{ cert.title }}</h3>
+                <div class="mt-2 flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                  Hover to flip
+                </div>
+              </div>
+            </div>
+
+            <!-- BACK -->
+            <div class="flip-face flip-face-back glass-card flex flex-col p-6" style="background: var(--bg-card);">
+              <h3 class="text-card-title font-bold text-[var(--text-primary)]">{{ cert.title }}</h3>
+              <p class="text-sm text-[var(--primary)] mt-1 font-medium">{{ cert.issuer }}</p>
+              <p *ngIf="cert.date" class="text-xs text-[var(--text-muted)] mt-1">{{ cert.date }}</p>
+              <p *ngIf="cert.description" class="text-sm text-[var(--text-secondary)] mt-3 leading-relaxed line-clamp-4">{{ cert.description }}</p>
+              <div class="mt-auto pt-5 flex flex-wrap items-center gap-3">
+                <a
+                  *ngIf="isPdf(cert.image)"
+                  [href]="cert.image"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn-primary !text-sm"
+                >
+                  Open PDF
+                </a>
+                <a
+                  *ngIf="cert.link"
+                  [href]="cert.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-light)] transition-colors"
+                >
+                  {{ 'certificates.view' | t }}
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <p class="text-center py-20 text-[var(--text-secondary)]">
+        {{ 'certificates.empty' | t }}
+      </p>
+    }
+  </div>
+</section>
