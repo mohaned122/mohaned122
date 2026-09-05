@@ -66,6 +66,8 @@ $ skills
 
 </div>
 
+[![Boot.dev Learn Pandas certificate](https://qvault-webapp-dynamic-assets.storage.googleapis.com/certificates/c47f4959-5d55-4502-a335-ee43235fb683.jpeg?v=1788635815)](https://www.boot.dev/certificates/c47f4959-5d55-4502-a335-ee43235fb683)
+
 ---
 
 > *"Building the future, one commit at a time."*
