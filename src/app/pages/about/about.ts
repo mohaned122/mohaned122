@@ -68,6 +68,117 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   yearsCoding = signal(new Date().getFullYear() - 2022);
 
   /* ─── Typing animation ─── */
+  technologyStack = [
+    { name: 'Java', mark: 'J', kind: 'java', icon: 'java' },
+    { name: 'TypeScript', mark: 'TS', kind: 'typescript', icon: 'typescript' },
+    { name: 'Angular', mark: 'A', kind: 'angular', icon: 'angular' },
+    { name: 'Flutter', mark: 'F', kind: 'flutter', icon: 'flutter' },
+    { name: 'Spring Boot', mark: 'SB', kind: 'spring', icon: 'springboot' },
+    { name: 'Python', mark: 'PY', kind: 'python', icon: 'python' },
+    { name: 'Firebase', mark: 'FB', kind: 'firebase', icon: 'firebase' },
+    { name: 'Docker', mark: 'DK', kind: 'docker', icon: 'docker' },
+    { name: 'MySQL', mark: 'SQL', kind: 'mysql', icon: 'mysql' },
+    { name: 'Linux', mark: 'LI', kind: 'linux', icon: 'linux' },
+    { name: 'Git', mark: 'G', kind: 'git', icon: 'git' },
+    { name: 'Symfony', mark: 'SF', kind: 'symfony', icon: 'symfony' },
+    { name: 'JavaScript', mark: 'JS', kind: 'javascript', icon: 'javascript' },
+    { name: 'Dart', mark: 'D', kind: 'dart', icon: 'dart' },
+    { name: 'REST APIs', mark: 'API', kind: 'rest', icon: 'openapi' },
+  ];
+
+  techOffset = 0;
+  techDirection = 'normal';
+
+  clientComments = [
+    {
+      name: 'Amina Haddad',
+      role: 'Product Lead',
+      company: 'Northstar Studio',
+      comment:
+        'Mohanned translated rough ideas into a cleaner product flow and a more confident customer experience. The process felt structured, fast, and genuinely collaborative.',
+      projectId: '',
+    },
+    {
+      name: 'Youssef Ben Ali',
+      role: 'Founder',
+      company: 'PulseOps',
+      comment:
+        'He helped us move from scattered requirements to a working MVP with strong UX decisions and reliable implementation. It felt like having a senior builder on the team.',
+      projectId: '',
+    },
+    {
+      name: 'Sarra Khelifi',
+      role: 'Operations Manager',
+      company: 'Bloom & Co.',
+      comment:
+        'The communication was clear, the execution was thoughtful, and the final result feels polished enough for real customers. We saw progress quickly and confidently.',
+      projectId: '',
+    },
+    {
+      name: 'Karim Tounsi',
+      role: 'Startup Mentor',
+      company: 'Launchlane',
+      comment:
+        'He combines practical engineering thinking with a product mindset. The outcome was not only functional, but it actually helped us communicate our value better.',
+      projectId: '',
+    },
+  ];
+
+  getTechLogoUrl(tech: { name: string; icon?: string }): string {
+    const key = tech.icon ?? tech.name.toLowerCase().replace(/\s+/g, '').replace(/\+/g, 'plus').replace(/\//g, '');
+    return `https://cdn.simpleicons.org/${key}`;
+  }
+
+  getTechFallbackDataUri(name: string): string {
+    const initials = name
+      .split(/\s+/)
+      .map((part) => part[0] ?? '')
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="18" fill="#0d1220"/>
+        <text x="50%" y="55%" text-anchor="middle" font-size="22" font-family="Arial, sans-serif" font-weight="700" fill="#f8fafc">${initials || '?'}</text>
+      </svg>
+    `;
+
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  }
+
+  onTechImageError(event: Event, tech: { name: string }): void {
+    const target = event.target as HTMLImageElement | null;
+    if (!target) return;
+    target.src = this.getTechFallbackDataUri(tech.name);
+    target.onerror = null;
+  }
+
+  onTechPointerMove(event: PointerEvent): void {
+    const element = event.currentTarget as HTMLElement;
+    const rect = element.getBoundingClientRect();
+    const relativeX = event.clientX - rect.left;
+    this.techDirection = relativeX > rect.width / 2 ? 'reverse' : 'normal';
+    const delta = ((relativeX / rect.width) - 0.5) * 120;
+    this.techOffset = Math.max(-60, Math.min(60, delta));
+  }
+
+  onTechPointerLeave(): void {
+    this.techDirection = 'normal';
+    this.techOffset = 0;
+  }
+
+  getTimelineMedia(item: TimelineItem): string {
+    const project = item.projectId ? this.allProjects.find((p) => p.id === item.projectId) : undefined;
+    if (project?.image) return project.image;
+    if (item.type === 'education') return 'photos/workspace.jpg';
+    return 'photos/portrait.jpg';
+  }
+
+  getCommentProject(comment: { projectId?: string }) {
+    return comment.projectId ? this.allProjects.find((project) => project.id === comment.projectId) : undefined;
+  }
+
   roles = [
     'Full Stack Developer',
     'Flutter Developer',
@@ -185,11 +296,13 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       techs.push({ category: 'Tools & Platforms', items: uniqueTechs.slice(mid) });
     }
     const input: CvInput = {
+      name: 'Mohanned Zayoud',
+      title: this.ts.t('hero.subtitle'),
       education: this.educationData(),
       internships: this.internshipData(),
       projects: this.allProjects,
       certificates: this.allCerts,
-      summary: this.ts.t('about.summary.text'),
+      profile: this.ts.t('about.summary.text'),
       techs,
       languages: [
         { name: 'Arabic', level: 'Native' },
@@ -212,6 +325,10 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   private pickProjects() {
     const shuffled = [...this.allProjects].sort(() => Math.random() - 0.5);
     this.randomProjects.set(shuffled.slice(0, 4));
+    this.clientComments = this.clientComments.map((comment, index) => ({
+      ...comment,
+      projectId: this.allProjects[index % Math.max(this.allProjects.length, 1)]?.id ?? '',
+    }));
     if (isPlatformBrowser(this.platformId)) {
       requestAnimationFrame(() => this.animateProjectItems());
     }

@@ -130,5 +130,11 @@
   "admin.internships": "التدريب",
   "about.journey": "رحلتي",
   "about.journey.badge": "الخلفية والخبرة",
-  "about.present": "حالياً"
+  "about.present": "حالياً",
+  "about.tech.badge": "المكدس التقني",
+  "about.tech.ecosystem": "النظام البيئي التقني",
+  "about.comments.badge": "التعليقات",
+  "about.comments.title": "تعليقات العملاء",
+  "about.comments.relatedProject": "المشروع المرتبط",
+  "about.comments.placeholder": "تعليقات تجريبية لعرض لاحقاً واستبدالها في المستقبل."
 }

@@ -144,5 +144,11 @@
   "admin.internships": "Stages",
   "about.journey": "Mon Parcours",
   "about.journey.badge": "Formation & Expérience",
-  "about.present": "Aujourd'hui"
+  "about.present": "Aujourd'hui",
+  "about.tech.badge": "Pile technologique",
+  "about.tech.ecosystem": "Écosystème technologique",
+  "about.comments.badge": "Retour",
+  "about.comments.title": "Commentaires clients",
+  "about.comments.relatedProject": "Projet associé",
+  "about.comments.placeholder": "Commentaires clients de démonstration pour remplacement ultérieur."
 }

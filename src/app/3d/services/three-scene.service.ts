@@ -59,9 +59,15 @@ export class ThreeSceneService {
   }
 
   dispose(): void {
-    if (this.frameId !== null) cancelAnimationFrame(this.frameId);
+    if (this.frameId !== null && typeof cancelAnimationFrame !== 'undefined') {
+      cancelAnimationFrame(this.frameId);
+    }
     this.frameId = null;
-    window.removeEventListener('resize', this.resize);
+
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.resize);
+    }
+
     this.updateCallbacks.clear();
     this.scene?.traverse((object) => {
       const mesh = object as THREE.Mesh;

@@ -144,5 +144,11 @@
   "admin.internships": "Internships",
   "about.journey": "My Journey",
   "about.journey.badge": "Background & Experience",
-  "about.present": "Present"
+  "about.present": "Present",
+  "about.tech.badge": "Stack",
+  "about.tech.ecosystem": "Technology ecosystem",
+  "about.comments.badge": "Feedback",
+  "about.comments.title": "Client Comments",
+  "about.comments.relatedProject": "Related Project",
+  "about.comments.placeholder": "Placeholder client comments for future replacement."
 }

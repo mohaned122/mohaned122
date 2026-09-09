@@ -114,6 +114,7 @@ export class Scene3dCanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.interactionManager.dispose();
     this.threeScene.dispose();
   }
